@@ -7,8 +7,6 @@ import numpy as np
 class InvestingBanditEnv(gym.Env):
 
     def __init__(self):
-        self.T = 200
-        self.t = 0
         self.s_0 = 0
         self.s = self.s_0
         self.action_space = spaces.Discrete(3)
@@ -21,12 +19,6 @@ class InvestingBanditEnv(gym.Env):
 
         done = False
 
-        if self.t >= self.T:
-            done = True
-            self.t = 0
-        else:
-            self.t += 1
-
         if action == 0:
             r = norm.rvs(loc=2.8, scale=1.0, size=1)
 
@@ -37,7 +29,7 @@ class InvestingBanditEnv(gym.Env):
             alpha = -4
             scale = np.sqrt(1.5**2 / (1- 2 * (alpha / np.sqrt(1+alpha ** 2))**2 / np.pi))
             loc = 3.0 - scale * (alpha / np.sqrt(1+alpha ** 2)) * np.sqrt(2. / np.pi)
-            r = skewnorm.rvs(a=-4, loc=loc, scale=scale)
+            r = skewnorm.rvs(a=-4, loc=loc, scale=scale, size=1)
 
         return self.s_0, r, done, {}
 
