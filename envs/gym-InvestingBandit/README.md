@@ -28,6 +28,4 @@ for i in range(num_episodes):
       break
 ```
 
-![Distribution of rewards for the three arms](rewrad_distribution.png)
-
-
+![Distribution of rewards for the three arms](reward_distribution.png)
