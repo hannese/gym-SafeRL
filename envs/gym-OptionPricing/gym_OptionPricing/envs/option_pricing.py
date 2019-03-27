@@ -14,10 +14,13 @@ class OptionPricingEnv(gym.Env):
     def __init__(self):
         self.f_u = 2
         self.f_d = 0.5
-        self.p = 0.35
+        self.active_model = None
+        self.ps = [0.25, 0.50, 0.75]
+        self.p = None
         self.p_h = 0.2
         self.T = 20
         self.p_r = 1-0.5 ** (1./self.T)
+        self.p_r = 0.
         self.gamma = 0.95
         self.K = 5.0
 
@@ -41,6 +44,7 @@ class OptionPricingEnv(gym.Env):
         if action or (self.s[1] >= self.T):     # Stop
             reward = min(self.K, self.s[0])
             self.s = self.s_0
+            info = self.active_model
             done = True
 
         elif (not action): # Wait
@@ -48,7 +52,7 @@ class OptionPricingEnv(gym.Env):
             self.s = [self.gamma * min(factor * self.s[0], self.K), self.s[1]+1]
             reward = self.p_h
 
-        return self.s, reward, done, {}
+        return self.s, reward, done, info
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -56,5 +60,8 @@ class OptionPricingEnv(gym.Env):
 
     def reset(self):
         self.s = self.s_0
+        idx = np.range.choice([0, 1, 2])
+        self.p = np.random.choice(self.ps[idx])
+        self.active_model = idx
         return self.s
 
