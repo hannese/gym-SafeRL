@@ -37,7 +37,7 @@ class OptionPricingEnv(gym.Env):
         assert self.action_space.contains(action)
 
         done = False
-
+        info = None
         if np.random.rand() < self.p_r:
             action = not action
 
@@ -60,8 +60,8 @@ class OptionPricingEnv(gym.Env):
 
     def reset(self):
         self.s = self.s_0
-        idx = np.range.choice([0, 1, 2])
-        self.p = np.random.choice(self.ps[idx])
+        idx = np.random.choice(3, 1)[0]
+        self.p = self.ps[idx]
         self.active_model = idx
         return self.s
 
